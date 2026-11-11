@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/patrick-hand/400.css";
+
+/* Feather Bold (Duolingo / Fontsmith) is never shipped with this repo.
+   It is used only where it is already installed on the viewer's computer;
+   everyone else sees Inter ExtraBold. */
+@font-face { font-family: 'Feather Local'; src: local('Feather Bold'), local('Feather-Bold'), local('Feather'); }
+
+@theme {
+  --color-navy: #102C41;
+  --color-azure: #4790CD;
+  --color-sky: #6EB9F2;
+  --color-ice: #F1F6FB;
+  --color-tint: #E3F0FB;
+  --color-cream: #F8FBFE;
+  --color-rule: #D6E2EE;
+  --color-muted: #5A6B7A;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Feather Local', 'Inter', system-ui, sans-serif;
+  --font-hand: 'Patrick Hand', 'Comic Sans MS', cursive;
+}
+
+html, body { background: var(--color-ice); color: var(--color-navy); }
+.font-display { font-weight: 800; letter-spacing: -0.01em; }
+:focus-visible { outline: 3px solid var(--color-azure); outline-offset: 2px; border-radius: 6px; }
+@keyframes pop { 0% { transform: scale(.9); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+.pop { animation: pop .18s ease-out; }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+.bob { animation: bob 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .pop, .bob { animation: none; } }

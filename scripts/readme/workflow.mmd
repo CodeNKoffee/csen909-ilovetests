@@ -1,0 +1,13 @@
+flowchart LR
+  A["Nour hands in<br/>photo wizard + blur check"] --> B["AI reads the text"]
+  B --> C["Teacher checks the text<br/>least certain first"]
+  C --> D["AI suggests marks<br/>per mark-scheme step"]
+  D --> E["Teacher confirms<br/>or overrides"]
+  E --> F["Red flags and<br/>class-wide mistakes"]
+  F --> G["Teacher releases"]
+  G --> H["Nour reads feedback<br/>and practises"]
+  G --> I["Parent weekly digest"]
+  classDef ai fill:#E3F0FB,stroke:#4790CD,color:#102C41
+  classDef human fill:#102C41,stroke:#102C41,color:#ffffff
+  class B,D ai
+  class A,C,E,F,G,H,I human

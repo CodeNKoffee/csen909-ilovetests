@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ilovetests.hatemsoliman.dev/sitemap.xml

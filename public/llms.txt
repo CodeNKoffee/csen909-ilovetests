@@ -1,0 +1,9 @@
+# iLoveTests
+
+> AI-assisted exam marking and learning-gap detection for Grades 1–5. A pupil hands in a photo of her paper, the AI reads it and suggests marks per mark-scheme step, and the teacher confirms every step before the pupil sees kind, specific feedback and practice. A course prototype for CSEN 909 Human Computer Interaction at the German University in Cairo (Winter 2026). All AI output is simulated with fixed data.
+
+- Live prototype: https://ilovetests.hatemsoliman.dev
+- Source code: https://github.com/CodeNKoffee/csen909-ilovetests
+- User guide: https://github.com/CodeNKoffee/csen909-ilovetests/wiki
+- Views: student (/student/), teacher and assistant (/teacher/), parent (/parent/)
+- Licence: MIT
