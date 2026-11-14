@@ -95,7 +95,7 @@ Light boxes are what the AI suggests. Dark boxes are people. Nothing reaches a p
 | Framework | [Next.js 16](https://nextjs.org) App Router, exported as a static site |
 | UI | React 19, TypeScript 5.9, Tailwind CSS 4 |
 | State | React context and a reducer, saved to local storage |
-| Fonts | Inter and Patrick Hand via Fontsource (SIL OFL); Feather Bold if installed |
+| Fonts | Inter, Nunito and Patrick Hand via Fontsource (SIL OFL); Feather Bold if installed |
 | Hosting | Vercel, with security headers in [`vercel.json`](vercel.json) |
 
 ## Run it locally
@@ -182,7 +182,7 @@ Teacher persona: Mrs Rasha ElNahas, Maadi Narmer School, used with her permissio
 
 Code: [MIT](LICENSE). Lukki, the mascot, is our own design.
 
-Inter and Patrick Hand are used under the SIL Open Font Licence via Fontsource.
+Inter, Nunito and Patrick Hand are used under the SIL Open Font Licence via Fontsource.
 Our headings use Duolingo's Feather Bold (Fontsmith End User Licence Agreement). Its licence does not allow us to publish the font file, so it is not in this repository; the site uses it only if it is installed on your computer and falls back to Inter otherwise.
 
 We wrote this prototype with help from Claude (Cowork) and reviewed, tested and edited all of it. The full AI history is linked in our Phase 3 report.

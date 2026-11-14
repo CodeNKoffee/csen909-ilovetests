@@ -100,8 +100,10 @@ await clip('feedback-and-practice', S, async (pg, w) => {
   await pg.goto(BASE + '/student/results/'); await w(1800);
   await btn(pg, /How to fix it/).click(); await w(1500);
   await pg.goto(BASE + '/student/practice/'); await w(900);
-  const bars = pg.locator('main button');
-  for (const k of [0, 1, 0]) { await bars.nth(k).click(); await w(900); await pg.locator('main button').last().click(); await w(600); }
+  const opts = () => pg.getByRole('group', { name: 'Pick the bigger fraction' }).getByRole('button');
+  for (const [k, last] of [[0, 'Next one'], [1, 'Next one'], [0, 'Finish']]) {
+    await opts().nth(k).click(); await w(500); await btn(pg, 'Check').click(); await w(1000); await btn(pg, last).click(); await w(600);
+  }
   await w(1200);
 });
 
