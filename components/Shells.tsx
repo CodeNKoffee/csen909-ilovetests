@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useStore } from '@/lib/store';
 import { Wordmark } from './ui';
-import Lukki from './Lukki';
 
 const Icon = ({ d }: { d: string }) => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d={d} /></svg>
@@ -77,30 +76,6 @@ export function TeacherShell({ children, title, actions }: { children: ReactNode
           {children}
         </main>
       </div>
-    </div>
-  );
-}
-
-/* ---------------- Parent: simple single column ---------------- */
-export function ParentShell({ children }: { children: ReactNode }) {
-  return (
-    <div className="min-h-screen bg-ice">
-      <header className="bg-white border-b border-rule">
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center gap-3">
-          <Link href="/"><Wordmark size="text-xl" suffix="Parents" /></Link>
-          <span className="ml-auto text-sm text-muted">Nour’s family</span>
-        </div>
-      </header>
-      <main className="max-w-2xl mx-auto px-5 py-6">{children}</main>
-    </div>
-  );
-}
-
-export function LukkiSays({ children, mood = 'happy' }: { children: ReactNode; mood?: 'happy' | 'cheer' | 'think' | 'wave' }) {
-  return (
-    <div className="flex items-end gap-3 pop">
-      <Lukki size={68} mood={mood} className="shrink-0 bob" />
-      <div className="relative bg-white border-2 border-sky rounded-2xl rounded-bl-sm px-4 py-3 text-[15px] leading-snug font-medium">{children}</div>
     </div>
   );
 }

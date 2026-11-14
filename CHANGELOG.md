@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+- Parent view redesign in the same style as the student portal, calmer: a "this week" card showing where the quiz is (with no marks until release), at-a-glance numbers from released results, the latest result question by question, how to help at home (with whether Nour has practised), the term chart and an updates feed. Still read-only; new results and practice appear only after Mrs Rasha releases them.
+- The score chart is now one component, shared by the student Progress page and the parent view.
+
 ## [1.1.1] - 2026-11-14
 
 ### Changed
