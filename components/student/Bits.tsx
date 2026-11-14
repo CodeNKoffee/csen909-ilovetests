@@ -99,8 +99,8 @@ export function ScoreRing({ got, max, size = 132 }: { got: number; max: number; 
       </svg>
       <div className="absolute inset-0 grid place-items-center text-center">
         <div>
-          <div className="font-display text-[40px] leading-none tabular-nums">{got}</div>
-          <div className="text-[13px] font-bold text-muted mt-1">out of {max}</div>
+          <div className="font-display leading-none tabular-nums" style={{ fontSize: Math.round(size * 0.3) }}>{got}</div>
+          <div className={`font-bold text-muted ${size < 110 ? 'text-[11px] mt-0.5' : 'text-[13px] mt-1'}`}>{size < 110 ? 'of' : 'out of'} {max}</div>
         </div>
       </div>
     </div>

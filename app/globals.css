@@ -39,11 +39,12 @@ html, body { background: var(--color-ice); color: var(--color-navy); }
 .bob { animation: bob 2.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .pop, .bob { animation: none; } }
 
-/* ---------- Student portal ("Duolingo for the kid") ----------
-   Scoped to .kid so the teacher and parent views keep their calm look.
+/* ---------- Student portal ("Duolingo for the kid") and parent digest ----------
+   Scoped to .kid and .fam so the teacher view keeps its calm look.
    Headings use Feather Bold where it is installed, else Nunito (rounded, OFL). */
-.kid { --font-display: 'Feather Local', 'Nunito', 'Inter', system-ui, sans-serif; --ease: cubic-bezier(.2,.8,.2,1); }
+.kid, .fam { --font-display: 'Feather Local', 'Nunito', 'Inter', system-ui, sans-serif; --ease: cubic-bezier(.2,.8,.2,1); }
 .kid .font-display { font-weight: 900; letter-spacing: -0.005em; }
+.fam .font-display { font-weight: 800; letter-spacing: -0.005em; } /* parent view: same type, a calmer weight */
 
 /* Chunky pressable buttons and tiles: a solid bottom edge that the press sinks into. */
 .press { position: relative; transition: transform 150ms var(--ease), box-shadow 150ms var(--ease), background-color 150ms var(--ease); box-shadow: 0 4px 0 var(--edge, var(--color-rule-edge)); }

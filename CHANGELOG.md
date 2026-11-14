@@ -11,7 +11,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Hand-in: tips for a clear photo, a camera viewfinder with page counter, page thumbnails with status, a short "Lukki is checking" step, and a celebration after sending.
 - Results: score ring, "You're great at" and "Let's practise" chips, full question text with marks per question, and "How to fix it" showing each mark-scheme step the pupil did or has not done yet.
 - Practice: pick, then Check; feedback panel with a "same-size pieces" drawing of the tip; the answer is not given away after a miss; Play again.
-- Progress: score chart with a list view and a tap or hover readout, and skill levels in words.
+- Progress: score chart with a list view and a tap or hover readout, and skill levels in words. The chart is shared with the parent view.
+
+- Parent view redesign in the same style, calmer: a "this week" card with where the quiz is, at-a-glance numbers, the latest confirmed result question by question, how to help at home (with whether Nour has practised), the term chart and an updates feed. Still read-only and confirmed results only.
 
 ### Added
 - Messages sheet behind the bell (was a link back to Home), with class notes.
