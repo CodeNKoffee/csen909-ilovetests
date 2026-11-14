@@ -11,54 +11,12 @@ const Icon = ({ d }: { d: string }) => (
 );
 const I = {
   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
-  upload: 'M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
-  star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
-  chart: 'M4 20V10m6 10V4m6 16v-7m4 7H2',
   check: 'M4 12l5 5L20 6',
   text: 'M4 6h16M4 12h10M4 18h7',
   users: 'M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6m13 9v-1a4 4 0 0 0-3-3.9M16 4.1a3 3 0 0 1 0 5.8',
   send: 'M22 2L11 13M22 2l-7 20-4-9-9-4z',
   list: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
-  bell: 'M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
 };
-
-/* ---------------- Student: phone-first, playful ---------------- */
-export function StudentShell({ children, title }: { children: ReactNode; title?: string }) {
-  const path = usePathname();
-  const { s } = useStore();
-  const unread = s.notifs.filter((n) => n.to === 'student' && !n.read).length;
-  const tabs = [
-    { href: '/student/', label: 'Home', icon: I.home },
-    { href: '/student/hand-in/', label: 'Hand in', icon: I.upload },
-    { href: '/student/practice/', label: 'Practice', icon: I.star },
-    { href: '/student/progress/', label: 'Progress', icon: I.chart },
-  ];
-  return (
-    <div className="min-h-screen flex justify-center bg-ice md:py-6">
-      <div className="w-full max-w-[420px] bg-cream md:rounded-[36px] md:border-[3px] md:border-navy/80 md:shadow-xl flex flex-col min-h-screen md:min-h-[840px] md:max-h-[880px] overflow-hidden relative">
-        <header className="flex items-center justify-between px-5 pt-5 pb-2">
-          <Link href="/" aria-label="Back to start"><Wordmark size="text-xl" /></Link>
-          <Link href="/student/" className="relative p-2 rounded-full bg-white border border-rule" aria-label={`${unread} new notifications`}>
-            <Icon d={I.bell} />
-            {unread > 0 && <span className="absolute -top-1 -right-1 bg-azure text-white text-[10px] font-bold rounded-full w-5 h-5 grid place-items-center">{unread}</span>}
-          </Link>
-        </header>
-        {title && <h1 className="px-5 pt-1 pb-1 font-display text-2xl">{title}</h1>}
-        <main className="flex-1 overflow-y-auto px-5 pb-28">{children}</main>
-        <nav className="absolute bottom-0 inset-x-0 bg-white border-t border-rule grid grid-cols-4 px-2 pb-3 pt-2" aria-label="Student">
-          {tabs.map((t) => {
-            const on = path === t.href || (t.href !== '/student/' && path.startsWith(t.href));
-            return (
-              <Link key={t.href} href={t.href} className={`flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-[11px] font-semibold ${on ? 'text-navy bg-tint' : 'text-muted'}`}>
-                <Icon d={t.icon} />{t.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </div>
-  );
-}
 
 /* ---------------- Teacher: calm desktop, side menu + class tabs ---------------- */
 export function TeacherShell({ children, title, actions }: { children: ReactNode; title: string; actions?: ReactNode }) {
