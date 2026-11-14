@@ -4,7 +4,7 @@ import { StudentShell } from '@/components/student/StudentShell';
 import { Icon, KidLink, LukkiBubble, Pill, SectionTitle, Tile } from '@/components/student/Kid';
 import { ScoreRing, Tracker } from '@/components/student/Bits';
 import { useStore, total, maxOf } from '@/lib/store';
-import { exams } from '@/lib/data';
+import { exams, nourHistory } from '@/lib/data';
 
 export default function Results() {
   return (
@@ -31,7 +31,22 @@ function ResultsBody() {
         <h1 className="font-display text-[28px] leading-tight">My results</h1>
         <LukkiBubble mood="think">Your Fractions quiz isn’t back yet. Mrs Rasha checks every answer before you see it.</LukkiBubble>
         {sub.status !== 'due' && <Tile className="p-5"><Tracker status={sub.status} /></Tile>}
-        <KidLink href="/student/" kind="white" size="md" className="w-full"><Icon name="home" size={18} />Back home</KidLink>
+        <SectionTitle>Already back</SectionTitle>
+        <Tile className="p-4">
+          <ul className="divide-y divide-rule">
+            {[...nourHistory].reverse().map((h) => (
+              <li key={h.exam} className="flex items-center gap-3 py-2.5 text-[15px]">
+                <span className="font-semibold flex-1">{h.exam}</span>
+                <span className="text-muted text-[13px]">{h.date}</span>
+                <span className="font-display tabular-nums w-12 text-right">{h.score}%</span>
+              </li>
+            ))}
+          </ul>
+        </Tile>
+        <div className="grid grid-cols-2 gap-3">
+          <KidLink href="/student/progress/" kind="sky" size="md" className="w-full"><Icon name="chart" size={18} />My progress</KidLink>
+          <KidLink href="/student/" kind="white" size="md" className="w-full"><Icon name="home" size={18} />Back home</KidLink>
+        </div>
       </div>
     );
   }

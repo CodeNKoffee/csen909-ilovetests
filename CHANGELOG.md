@@ -5,6 +5,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-14
+
+### Changed
+- The parent view is never empty: before release it shows earlier released results and where this week's quiz is, with no marks. New results still appear only after release.
+- "My results" shows earlier results while the new quiz is being checked.
+- The audit trail shows the events from earlier in the week below the live demo events.
+
 ## [1.1.0] - 2026-11-14
 
 ### Changed
@@ -46,7 +53,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Demo guide and Reset demo for testers.
 - README media script, user guide in `docs/wiki/`, SEO and sharing files, security headers.
 
-[Unreleased]: https://github.com/CodeNKoffee/csen909-ilovetests/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/csen909-ilovetests/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/CodeNKoffee/csen909-ilovetests/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/CodeNKoffee/csen909-ilovetests/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/CodeNKoffee/csen909-ilovetests/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CodeNKoffee/csen909-ilovetests/releases/tag/v1.0.0
