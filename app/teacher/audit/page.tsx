@@ -10,7 +10,7 @@ export default function Audit() {
   const { s } = useStore();
   return (
     <TeacherShell title="Audit trail">
-      <p className="text-sm text-muted mb-4">Every hand-in, correction, override and release, newest first.</p>
+      <p className="text-sm text-muted mb-4">Key workflow events: hand-ins, text checks, drafts, confirmations, overrides, red flags, announcements, releases and sign-ins. Newest first. Small edits such as typing a comment are not logged.</p>
       <Card className="p-5 max-w-3xl">
         {s.audit.length === 0 ? <p className="text-sm text-muted">Nothing yet. Start the demo by handing in Nour’s quiz.</p> : (
           <ol className="space-y-3">

@@ -1,6 +1,6 @@
 {
   "name": "ilovetests",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "iLoveTests – AI-assisted exam assessment and learning-gap detection for Grades 1–5 (CSEN 909 HCI prototype, GUC Winter 2026)",
   "scripts": {

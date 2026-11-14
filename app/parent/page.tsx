@@ -34,7 +34,7 @@ export default function Parent() {
             {sub.comment && <p className="mt-3 text-sm rounded-xl bg-ice p-3">Mrs Rasha: “{sub.comment}”</p>}
           </Card>
         )}
-        {flag.state === 'confirmed' && (
+        {released && flag.state === 'confirmed' && (
           <Card className="p-5 bg-tint border-sky">
             <Label>How you can help at home</Label>
             <p className="text-sm">{flag.note}</p>
@@ -48,7 +48,7 @@ export default function Parent() {
           </div>
           <p className="text-xs text-muted mt-2">Steady progress since September.</p>
         </Card>
-        <p className="text-xs text-muted text-center">Parents can read, not change. Questions go to Mrs Rasha through the school.</p>
+        <p className="text-xs text-muted text-center">Parents only see results after Mrs Rasha releases them. In this demo the parent view has no sign-in, so it shows how the page would look.</p>
       </div>
     </ParentShell>
   );

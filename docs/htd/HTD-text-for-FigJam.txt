@@ -1,67 +1,64 @@
 HTD 1 · Student hands in the weekly assignment (Nour (Grade 4))
-Phase 2 HTA: 5 tasks, 13 steps
-0. Student hands in the weekly assignment
-Plan 0: Do 1–4 in order. If Lukki says a page is blurry, do 3.3, then 4.
-  1. Open “Hand in my work”
-     1.1 See the due card from Lukki on Home
-  2. Solve on paper
-     2.1 Write the working steps
-     2.2 Write the final answer
-  3. Take photos in the wizard
-     3.1 Snap each page inside the frame
-     3.2 [System] App checks blur and readability
-     3.3 Retake a page if Lukki asks
-  4. Send to Mrs Rasha
-     4.1 Tap “Send to Mrs Rasha”
-Gone from the HTA: Find the post in Classroom (1.1–1.3); Check each photo by eye (3.2); Open Classroom, attach, turn in (4.1–4.3); Hand in the paper copy (5)
+Plan 0: Do 1–4 in order. If the readability check (3.2) fails, retake (3.3) and the check runs again. Only readable pages go on to 4.
+  1 Open “Hand in my work”
+    1.1 See the due card from Lukki on Home
+  2 Solve on paper
+    2.1 Write the working steps
+    2.2 Write the final answer
+  3 Take photos in the wizard
+    3.1 Snap each page inside the frame
+    3.2 [System] App checks blur and readability
+    3.3 Retake the page, then back to 3.2: the app checks it again
+  4 Send to Mrs Rasha
+    4.1 Tap “Send to Mrs Rasha”
+  Steps removed from the HTA: Find the post in Classroom (1.1–1.3); Check each photo by eye (3.2); Open Classroom, attach, turn in (4.1–4.3); Hand in the paper copy (5)
 
 HTD 2 · Teacher or assistant reads and grades a batch (Mrs Rasha · Hatem (assistant))
-Phase 2 HTA: 5 tasks, 17 steps
-0. Teacher or assistant reads and grades a batch
-Plan 0: Do 1–5 in order. Hatem stops at 5 with “Send draft”; only Mrs Rasha confirms.
-  1. Open the batch
-     1.1 Tap the next action on Home
-  2. Check the text the AI read
-     2.0 [System] AI reads every answer; least certain first
-     2.1 Confirm or correct each reading
-     2.2 Mark unreadable answers (0 marks)
-  3. Review the AI marks
-     3.0 [System] AI marks each step and flags “Second look”
-     3.1 Confirm, or tap steps to override
-     3.2 “Not in the mark scheme” → own judgement
-  4. Leave comments
-     4.1 Edit the suggested comment
-     4.2 Add a general comment
-  5. Confirm all grades
-     5.1 Tap “Confirm all” (assistant: “Send draft”)
-Gone from the HTA: Hand off by phone and WhatsApp (1.1–1.3); Solve each question ourselves (3.4); Make out handwriting alone (2.2); Return the batch and tell the teacher (5.1–5.2)
+Plan 0: Do 1–5 in order. Hatem (assistant) can only save drafts and send them on; only Mrs Rasha confirms grades and decides “not in the mark scheme”.
+States: AI draft -> Assistant draft (not a grade) -> Teacher-confirmed grade -> Released result
+  1 Open the batch
+    1.1 Tap the next action on Home
+  2 Check the text the AI read
+    2.0 [System] AI reads every answer; least certain first
+    2.1 Confirm or correct each reading
+    2.2 Mark unreadable answers (0 marks)
+  3 Review the AI marks
+    3.0 [System] AI marks each step and flags “Second look”
+    3.1 Confirm, or tap steps to override [Teacher]
+    3.2 Save the marks as a draft (not a grade) [Assistant]
+    3.3 “Not in the mark scheme”: assistant sends it to the teacher; only she decides the marks [Teacher decides]
+  4 Leave comments
+    4.1 Edit the suggested comment
+    4.2 Add a general comment
+  5 Confirm the grades
+    5.1 Tap “Confirm all grades”: on only once every answer is confirmed [Teacher]
+    5.2 Tap “Send draft to Mrs Rasha”: drafts only [Assistant]
+  Steps removed from the HTA: Hand off by phone and WhatsApp (1.1–1.3); Solve each question ourselves (3.4); Make out handwriting alone (2.2); Return the batch and tell the teacher (5.1–5.2)
 
 HTD 3 · Teacher identifies students needing support (Mrs Rasha)
-Phase 2 HTA: 4 tasks, 8 steps
-0. Teacher identifies students needing support
-Plan 0: Do 1, then 2 for each open flag. Do 3 once per batch.
-  1. Open Students
-     1.0 [System] App spots repeating and class-wide mistakes
-     1.1 See open red flags with evidence
-  2. Decide on each red flag
-     2.1 Edit the kind note for the child
-     2.2 Confirm (sends practice) or dismiss
-  3. Share class-wide mistakes
-     3.1 Tap “Announce” (no names shown)
-Gone from the HTA: Remember patterns from memory (1.1–1.2); Report on WhatsApp (2.1–2.2); Collect mistakes by hand (3.1)
+Plan 0: Do 1, then 2 for each open flag. Do 3 once per batch. Practice and results are separate: confirming a flag never releases a result (Release is its own task).
+  1 Open Students
+    1.0 [System] App spots repeating and class-wide mistakes
+    1.1 See open red flags with evidence
+  2 Decide on each red flag
+    2.1 Edit the kind note for the child
+    2.2 Confirm the flag, or dismiss it
+    2.3 [System] On confirm, practice goes to the child. No result is released
+  3 Share class-wide mistakes
+    3.1 Tap “Announce” (no names shown)
+  Steps removed from the HTA: Remember patterns from memory (1.1–1.2); Report on WhatsApp (2.1–2.2); Collect mistakes by hand (3.1)
 
 HTD 4 · Student reads results and feedback (Nour (Grade 4))
-Phase 2 HTA: 4 tasks, 9 steps
-0. Student reads results and feedback
 Plan 0: Do 1–3 in order. Do 4 when Mrs Rasha recommends practice.
-  1. Open the results
-     1.1 Tap the “Quiz is back” notification
-  2. Read score and Lukki’s praise
-     2.0 [System] Encouragement shown first
-  3. Read feedback per question
-     3.1 See “Got it” or “Not yet”
-     3.2 Open “How to fix it”
-  4. Practise (optional)
-     4.1 Play 3 comparing-fractions rounds
-Gone from the HTA: Look in two places: Classroom and paper (1); Search for annotations (3.3); Wait for class feedback on WhatsApp (4.1)
+  1 Open the results
+    1.1 Tap the “Quiz is back” notification
+  2 Read score and Lukki’s praise
+    2.0 [System] Encouragement shown first
+    2.1 View the score and read Lukki’s praise
+  3 Read feedback per question
+    3.1 See “Got it” or “Not yet”
+    3.2 Open “How to fix it”
+  4 Practise (optional)
+    4.1 Play 3 comparing-fractions rounds
+  Steps removed from the HTA: Look in two places: Classroom and paper (1); Search for annotations (3.3); Wait for class feedback on WhatsApp (4.1)
 
