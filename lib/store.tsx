@@ -14,7 +14,9 @@ export interface AnswerState extends SeedAnswer {
   marks: number[];         // current marks per step
   notInScheme: boolean;
   comment: string;
+  drafted: boolean;        // saved as a draft by the assistant (not a grade yet)
   confirmed: boolean;      // confirmed by the teacher
+  escalatedBy?: Actor;     // who sent it to teacher judgement (not in the mark scheme)
 }
 export interface Submission {
   id: string; studentId: string; examId: string; status: Status;
@@ -40,7 +42,7 @@ export interface State {
 }
 
 const answersFrom = (seed: SeedAnswer[]): AnswerState[] => seed.map((s) => ({
-  ...s, text: s.ocr, checked: false, unreadable: false, marks: [...s.aiMarks], notInScheme: false, comment: s.feedback, confirmed: false,
+  ...s, text: s.ocr, checked: false, unreadable: false, marks: [...s.aiMarks], notInScheme: false, comment: s.feedback, drafted: false, confirmed: false,
 }));
 
 export const initialState = (): State => ({
@@ -75,9 +77,10 @@ type A =
   | { type: 'setMark'; id: string; qid: string; step: number; value: number }
   | { type: 'setComment'; id: string; qid: string; text: string }
   | { type: 'setGeneral'; id: string; text: string }
-  | { type: 'notInScheme'; id: string; qid: string }
+  | { type: 'notInScheme'; id: string; qid: string; by: Actor }
   | { type: 'confirmAnswer'; id: string; qid: string; by: Actor }
   | { type: 'confirmSub'; id: string; by: Actor }
+  | { type: 'confirmRemaining'; id: string }
   | { type: 'flag'; fid: string; state: 'confirmed' | 'dismissed'; note: string }
   | { type: 'announce'; text: string }
   | { type: 'release'; ids: string[] }
@@ -117,25 +120,43 @@ function reducer(s: State, a: A): State {
       return { ...n, audit: log(s, a.by, `${who(a.by)} finished the text check; AI suggested marks`) };
     }
     case 'setMark':
-      return updAns(s, a.id, a.qid, (x) => ({ ...x, marks: x.marks.map((m, i) => (i === a.step ? a.value : m)), confirmed: false }));
+      return updAns(s, a.id, a.qid, (x) => ({ ...x, marks: x.marks.map((m, i) => (i === a.step ? a.value : m)), confirmed: false, drafted: false }));
     case 'setComment':
       return updAns(s, a.id, a.qid, (x) => ({ ...x, comment: a.text }));
     case 'setGeneral':
       return upd(s, a.id, (x) => ({ ...x, comment: a.text }));
     case 'notInScheme': {
-      const n = updAns(s, a.id, a.qid, (x) => ({ ...x, notInScheme: !x.notInScheme }));
-      return { ...n, audit: log(s, 'teacher', `${a.qid.toUpperCase()} sent to teacher judgement (not in the mark scheme)`) };
+      const cur = s.submissions[a.id].answers.find((x) => x.qid === a.qid)!;
+      const on = !cur.notInScheme;
+      const n = updAns(s, a.id, a.qid, (x) => ({ ...x, notInScheme: on, escalatedBy: on ? a.by : undefined, confirmed: false, drafted: false }));
+      const q = a.qid.toUpperCase();
+      const text = !on ? `${who(a.by)} moved ${q} back to the mark scheme`
+        : a.by === 'teacher' ? `Mrs Rasha marked ${q} as not in the mark scheme (her own judgement)`
+        : `${who(a.by)} sent ${q} to Mrs Rasha: not in the mark scheme. Only she can decide the marks`;
+      return { ...n, audit: log(s, a.by, text) };
     }
     case 'confirmAnswer': {
-      const n = updAns(s, a.id, a.qid, (x) => ({ ...x, confirmed: a.by === 'teacher' }));
+      const n = updAns(s, a.id, a.qid, (x) => (a.by === 'teacher' ? { ...x, confirmed: true, drafted: false } : { ...x, drafted: true }));
       const ans = s.submissions[a.id].answers.find((x) => x.qid === a.qid)!;
       const changed = ans.marks.join() !== ans.aiMarks.join();
-      return { ...n, audit: log(s, a.by, `${who(a.by)} ${a.by === 'teacher' ? (changed ? 'overrode' : 'confirmed') : 'drafted'} ${a.qid.toUpperCase()}: ${ans.marks.reduce((p, c) => p + c, 0)} mark(s)`) };
+      return { ...n, audit: log(s, a.by, `${who(a.by)} ${a.by === 'teacher' ? (changed ? 'overrode' : 'confirmed') : 'saved a draft of'} ${a.qid.toUpperCase()}: ${ans.marks.reduce((p, c) => p + c, 0)} mark(s)`) };
     }
     case 'confirmSub': {
+      const sub = s.submissions[a.id];
+      // Nothing is confirmed in bulk: every answer must already be reviewed.
+      if (a.by === 'teacher' && sub.answers.some((q) => !q.confirmed)) return s;
+      if (a.by !== 'teacher' && sub.answers.some((q) => !q.drafted && !q.confirmed)) return s;
       const st: Status = a.by === 'teacher' ? 'confirmed' : 'drafted';
-      const n = upd(s, a.id, (x) => ({ ...x, status: st, draftedBy: a.by, answers: x.answers.map((q) => ({ ...q, confirmed: a.by === 'teacher' })) }));
-      return { ...n, audit: log(s, a.by, a.by === 'teacher' ? `Mrs Rasha confirmed all grades for ${examOf(s, a.id).title}` : `Hatem sent draft grades to Mrs Rasha for sign-off`) };
+      const n = upd(s, a.id, (x) => ({ ...x, status: st, draftedBy: a.by }));
+      return { ...n, audit: log(s, a.by, a.by === 'teacher' ? `Mrs Rasha confirmed the grades for ${examOf(s, a.id).title} (all ${sub.answers.length} answers reviewed)` : `Hatem sent draft grades to Mrs Rasha for sign-off`) };
+    }
+    case 'confirmRemaining': {
+      // An explicit, teacher-only batch action. Answers sent to teacher judgement are never included.
+      const sub = s.submissions[a.id];
+      const rest = sub.answers.filter((q) => !q.confirmed && !q.notInScheme);
+      if (rest.length === 0) return s;
+      const n = upd(s, a.id, (x) => ({ ...x, answers: x.answers.map((q) => (!q.confirmed && !q.notInScheme ? { ...q, confirmed: true, drafted: false } : q)) }));
+      return { ...n, audit: log(s, 'teacher', `Mrs Rasha confirmed ${rest.length} remaining answer(s) with the marks as they stand (${rest.map((q) => q.qid.toUpperCase()).join(', ')})`) };
     }
     case 'flag': {
       const f = s.flags.find((x) => x.id === a.fid)!;
@@ -158,7 +179,7 @@ function reducer(s: State, a: A): State {
     case 'memory':
       return { ...s, memoryOn: a.on, audit: log(s, s.role, `${who(s.role)} switched history ${a.on ? 'on' : 'off'}`) };
     case 'role':
-      return { ...s, role: a.role };
+      return a.role === s.role ? s : { ...s, role: a.role, audit: log(s, a.role, `${who(a.role)} signed in`) };
     case 'practice':
       return { ...s, practiceDone: s.practiceDone + 1 };
     case 'read':

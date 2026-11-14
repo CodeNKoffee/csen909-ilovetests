@@ -65,11 +65,13 @@ function AnswerCard({ id, a, active, onOpen }: { id: string; a: AnswerState; act
   return (
     <Card className={`p-4 ${active ? 'border-2 border-azure' : ''}`}>
       <button className="w-full flex items-center gap-2 text-left" onClick={onOpen} aria-expanded={active}>
-        <span className={`w-6 h-6 rounded-full grid place-items-center text-[11px] font-bold ${a.confirmed ? 'bg-azure text-white' : 'border border-rule'}`}>{a.confirmed ? '✓' : q.n}</span>
+        <span className={`w-6 h-6 rounded-full grid place-items-center text-[11px] font-bold ${a.confirmed ? 'bg-azure text-white' : a.drafted ? 'border-2 border-azure text-azure' : 'border border-rule'}`}>{a.confirmed ? '✓' : a.drafted ? 'D' : q.n}</span>
         <span className="font-semibold">Q{q.n}</span>
         <span className="text-sm text-muted truncate">{q.concept}</span>
         {a.hint && !a.confirmed && <Chip tone="navy" className="shrink-0">Second look</Chip>}
-        {a.notInScheme && <Chip tone="line" className="shrink-0">Your judgement</Chip>}
+        {a.notInScheme && !a.confirmed && <Chip tone="navy" className="shrink-0">{teacher ? 'Needs your decision' : 'Waiting for Mrs Rasha'}</Chip>}
+        {a.drafted && !a.confirmed && <Chip tone="line" className="shrink-0">Draft</Chip>}
+        {a.confirmed && <Chip tone="sky" className="shrink-0">Confirmed</Chip>}
         <span className="ml-auto font-display tabular-nums">{got}/{max}</span>
       </button>
       {active && (
@@ -84,7 +86,7 @@ function AnswerCard({ id, a, active, onOpen }: { id: string; a: AnswerState; act
                 const on = a.marks[i] > 0;
                 return (
                   <li key={i}>
-                    <button disabled={a.unreadable} onClick={() => d({ type: 'setMark', id, qid: a.qid, step: i, value: on ? 0 : st.marks })}
+                    <button disabled={a.unreadable || (!teacher && a.notInScheme)} onClick={() => d({ type: 'setMark', id, qid: a.qid, step: i, value: on ? 0 : st.marks })}
                       className={`w-full flex items-center gap-3 rounded-xl border px-3 py-2 text-sm text-left ${on ? 'border-azure bg-tint' : 'border-rule bg-white'} disabled:opacity-50`}
                       aria-pressed={on}>
                       <span className={`w-6 h-6 rounded-md grid place-items-center font-bold ${on ? 'bg-azure text-white' : 'border border-rule'}`}>{on ? '✓' : ''}</span>
@@ -98,6 +100,14 @@ function AnswerCard({ id, a, active, onOpen }: { id: string; a: AnswerState; act
             <p className="text-xs text-muted mt-2"><b>AI reason:</b> {a.reason}{overridden && <span className="text-azure font-semibold"> · You changed the AI suggestion</span>}</p>
           </div>
 
+          {a.notInScheme && (
+            <div className="mt-3 rounded-xl border-l-4 border-navy bg-ice px-3 py-2 text-sm">
+              {teacher
+                ? <><b>Not in the mark scheme.</b> {a.escalatedBy === 'assistant' ? 'Hatem sent this to you. ' : ''}Set the marks yourself, then confirm. The batch buttons skip this answer.</>
+                : <><b>Sent to Mrs Rasha.</b> Only she can decide the marks for an answer that is not in the mark scheme.</>}
+            </div>
+          )}
+
           {s.memoryOn && <MemoryCompare a={a} />}
 
           <div className="mt-3">
@@ -106,8 +116,8 @@ function AnswerCard({ id, a, active, onOpen }: { id: string; a: AnswerState; act
               className="mt-1 w-full border border-rule rounded-xl px-3 py-2 text-sm min-h-16" />
           </div>
           <div className="flex flex-wrap gap-2 mt-3">
-            <Btn onClick={() => d({ type: 'confirmAnswer', id, qid: a.qid, by: s.role })}>{teacher ? (overridden ? `Confirm my marks (${got})` : `Confirm AI marks (${got})`) : 'Save as draft'}</Btn>
-            <Btn kind="ghost" onClick={() => d({ type: 'notInScheme', id, qid: a.qid })}>{a.notInScheme ? 'Back to mark scheme' : 'Not in the mark scheme'}</Btn>
+            {(teacher || !a.notInScheme) && <Btn onClick={() => d({ type: 'confirmAnswer', id, qid: a.qid, by: s.role })}>{teacher ? (overridden ? `Confirm my marks (${got})` : `Confirm AI marks (${got})`) : 'Save as draft (not a grade)'}</Btn>}
+            <Btn kind="ghost" onClick={() => d({ type: 'notInScheme', id, qid: a.qid, by: s.role })}>{a.notInScheme ? 'Back to mark scheme' : teacher ? 'Not in the mark scheme' : 'Not in the mark scheme: ask Mrs Rasha'}</Btn>
           </div>
         </div>
       )}
@@ -125,6 +135,11 @@ function Grade({ id }: { id: string }) {
   const [open, setOpen] = useState(firstOpen.qid);
   const teacher = s.role === 'teacher';
   const confirmed = sub.answers.filter((a) => a.confirmed).length;
+  const drafted = sub.answers.filter((a) => a.drafted || a.confirmed).length;
+  const rest = sub.answers.filter((a) => !a.confirmed);
+  const restBatch = rest.filter((a) => !a.notInScheme);
+  const waiting = sub.answers.filter((a) => a.notInScheme && !a.confirmed);
+  const n = sub.answers.length;
 
   if (['due', 'submitted'].includes(sub.status)) {
     return <TeacherShell title="Grade"><Card className="p-6">The text for {student.name} is not checked yet. <Link className="underline" href={`/teacher/check/?sub=${id}`}>Check text first</Link>.</Card></TeacherShell>;
@@ -169,19 +184,25 @@ function Grade({ id }: { id: string }) {
         </div>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="flex-1"><Bar pct={(confirmed / sub.answers.length) * 100} label="Answers confirmed" /></div>
-            <span className="text-xs text-muted">{confirmed}/{sub.answers.length} {teacher ? 'confirmed' : 'drafted'}</span>
+            <div className="flex-1"><Bar pct={((teacher ? confirmed : drafted) / n) * 100} label={teacher ? 'Answers confirmed' : 'Answers drafted'} /></div>
+            <span className="text-xs text-muted">{teacher ? `${confirmed}/${n} confirmed` : `${drafted}/${n} drafted`}</span>
           </div>
-          <p className="text-xs text-muted">Answers that need a second look are opened first.</p>
+          <p className="text-xs text-muted">Answers that need a second look are opened first.{waiting.length > 0 && <b className="text-navy"> {waiting.length} waiting for {teacher ? 'your decision' : 'Mrs Rasha'}.</b>}</p>
           {sub.answers.map((a) => <AnswerCard key={a.qid} id={id} a={a} active={open === a.qid} onOpen={() => setOpen(open === a.qid ? '' : a.qid)} />)}
           <Card className="p-4">
             <label className="text-[11px] uppercase tracking-wider font-semibold text-muted" htmlFor="general">General comment</label>
             <textarea id="general" value={sub.comment} onChange={(e) => d({ type: 'setGeneral', id, text: e.target.value })}
               placeholder={exam.lang === 'de' ? 'Allgemeiner Kommentar…' : 'e.g. Lovely neat working, Nour. Let’s practise comparing fractions this week.'}
               className="mt-1 w-full border border-rule rounded-xl px-3 py-2 text-sm min-h-16" />
+            {teacher && restBatch.length > 0 && (
+              <div className="mt-3 rounded-xl bg-ice p-3 text-sm">
+                <b>{rest.length} answer(s) not confirmed yet.</b> Review each one, or confirm the rest as they stand.
+                <Btn kind="ghost" className="mt-2 w-full" onClick={() => d({ type: 'confirmRemaining', id })}>Confirm the other {restBatch.length} answer(s) as they stand</Btn>
+              </div>
+            )}
             <div className="flex items-center gap-3 mt-3">
               <div className="font-display text-2xl tabular-nums">{total(sub)} / {maxOf(sub.examId)}</div>
-              <Btn className="ml-auto" onClick={() => {
+              <Btn className="ml-auto" disabled={teacher ? confirmed < n : drafted < n} onClick={() => {
                 if (!sub.comment) d({ type: 'setGeneral', id, text: exam.lang === 'de' ? 'Gut gemacht! Übe das Kürzen noch einmal.' : 'Lovely neat working, Nour. Let’s practise comparing fractions this week.' });
                 d({ type: 'confirmSub', id, by: s.role });
                 router.push(teacher ? '/teacher/students/' : '/teacher/');

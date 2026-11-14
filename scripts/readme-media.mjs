@@ -82,7 +82,12 @@ await clip('check-and-grade', T, async (pg, w) => {
 });
 await clip('red-flag', T, async (pg, w) => {
   await pg.goto(BASE + '/teacher/grade/?sub=nour-frac'); await w(600);
-  for (const q of ['Q3', 'Q1', 'Q4', 'Q5']) { await btn(pg, new RegExp(q)).click(); await w(250); const b = btn(pg, /Confirm (AI|my) marks/); if (await b.count()) await b.click(); await w(250); }
+  // The grade button stays off until every answer is reviewed, so confirm each one.
+  for (const q of ['Q2', 'Q3', 'Q1', 'Q4', 'Q5']) {
+    const head = pg.getByRole('button', { name: new RegExp('^\\S*\\s*' + q) }).first();
+    if ((await head.getAttribute('aria-expanded')) !== 'true') { await head.click(); await w(250); }
+    await btn(pg, /Confirm (AI|my) marks/).click(); await w(250);
+  }
   await btn(pg, 'Confirm all grades').click(); await w(1500);
   await btn(pg, 'Confirm and send practice').click(); await w(900);
   await pg.getByRole('tab', { name: /Timeline/ }).click(); await w(1600);

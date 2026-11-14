@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-102C41"></a>
+  <a href="CHANGELOG.md"><img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-102C41"></a>
   <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-4790CD"></a>
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-102C41">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-4790CD">

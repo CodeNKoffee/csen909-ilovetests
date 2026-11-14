@@ -24,6 +24,6 @@ The scan sits on the left, the AI reading on the right, least certain answer fir
 - **Class-wide mistakes**: **Announce to Year 4B** posts one class note with no names.
 
 ## Release and audit trail
-**Release** sends confirmed results only, to pupil and parent together. **Audit trail** lists every hand-in, correction, override and release.
+**Release** sends confirmed results only, to pupil and parent together. **Audit trail** lists the key workflow events: hand-ins, text checks, drafts, confirmations, overrides, red flags, announcements, releases and sign-ins. Small edits such as typing a comment are not logged.
 
 ![Check and grade](https://github.com/CodeNKoffee/csen909-ilovetests/raw/main/docs/readme/check-and-grade.gif)

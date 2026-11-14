@@ -1,12 +1,30 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { StudentShell, LukkiSays } from '@/components/Shells';
 import { Btn, Card, Label, LinkBtn } from '@/components/ui';
 import Scan from '@/components/Scan';
 import { useStore } from '@/lib/store';
 
 const PAGES = [['q1', 'q2', 'q3'], ['q4', 'q5']];
-type Shot = { page: number; blurry: boolean };
+type Shot = { page: number; blurry: boolean; src?: string };
+
+// Simple real sharpness check for a chosen photo: variance of a Laplacian on a small grey copy.
+async function isBlurry(src: string): Promise<boolean> {
+  const img = new Image(); img.src = src; await img.decode();
+  const w = 256, h = Math.max(1, Math.round((img.naturalHeight / img.naturalWidth) * w));
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); if (!g) return false;
+  g.drawImage(img, 0, 0, w, h);
+  const px = g.getImageData(0, 0, w, h).data;
+  const grey = new Float32Array(w * h);
+  for (let i = 0; i < w * h; i++) grey[i] = 0.299 * px[i * 4] + 0.587 * px[i * 4 + 1] + 0.114 * px[i * 4 + 2];
+  let sum = 0, sq = 0, k = 0;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    const v = 4 * grey[y * w + x] - grey[y * w + x - 1] - grey[y * w + x + 1] - grey[(y - 1) * w + x] - grey[(y + 1) * w + x];
+    sum += v; sq += v * v; k++;
+  }
+  return sq / k - (sum / k) ** 2 < 40;
+}
 
 export default function HandIn() {
   const { s, d } = useStore();
@@ -14,13 +32,26 @@ export default function HandIn() {
   const [step, setStep] = useState(sub.status === 'due' ? 0 : 4);
   const [shots, setShots] = useState<Shot[]>([]);
   const [tries, setTries] = useState(0);
-  const current = shots.length < PAGES.length ? shots.length : -1;
+  const missing = PAGES.map((_, i) => i).filter((i) => !shots.some((x) => x.page === i));
+  const current = missing.length ? missing[0] : -1;
   const blurry = shots.find((x) => x.blurry);
+  const pick = useRef<HTMLInputElement>(null);
+
+  const choose = async (files: FileList | null) => {
+    if (!files) return;
+    const out: Shot[] = [];
+    for (const f of Array.from(files).slice(0, missing.length)) {
+      const src = URL.createObjectURL(f);
+      let b = false; try { b = await isBlurry(src); } catch { /* unreadable file: let the teacher see it */ }
+      out.push({ page: missing[out.length], blurry: b, src });
+    }
+    setShots([...shots, ...out].sort((x, y) => x.page - y.page));
+  };
 
   const snap = () => {
     // Simulated camera: the first photo of page 2 comes out blurry, so the blur check can catch it.
     const isBlurry = current === 1 && tries === 0;
-    setShots([...shots, { page: current, blurry: isBlurry }]);
+    setShots([...shots, { page: current, blurry: isBlurry }].sort((x, y) => x.page - y.page));
     if (isBlurry) setTries(1);
   };
   const retake = () => setShots(shots.filter((x) => !x.blurry));
@@ -67,7 +98,9 @@ export default function HandIn() {
                   <button onClick={snap} aria-label={`Take photo of page ${current + 1}`} className="w-[72px] h-[72px] rounded-full bg-white border-[6px] border-sky active:scale-95 transition" />
                 </div>
               </div>
-              <button className="w-full text-sm text-muted underline">or choose photos from the tablet</button>
+              <input ref={pick} type="file" accept="image/*" multiple hidden onChange={(e) => { void choose(e.target.files); e.target.value = ''; }} />
+              <button onClick={() => pick.current?.click()} className="w-full text-sm text-muted underline min-h-11">or choose photos from the tablet</button>
+              <p className="text-[11px] text-muted text-center">Demo camera: the shutter makes a practice photo. Chosen photos stay on this device and get a real sharpness check.</p>
             </>
           ) : (
             <LukkiSays mood="cheer">Both pages captured! Let’s check them.</LukkiSays>
@@ -81,16 +114,16 @@ export default function HandIn() {
         <div className="space-y-4">
           {blurry ? (
             <>
-              <LukkiSays mood="think"><b>Page 2 is blurry.</b> I can’t read it yet. Can you take it again?</LukkiSays>
+              <LukkiSays mood="think"><b>Page {blurry.page + 1} is blurry.</b> I can’t read it yet. Can you take it again?</LukkiSays>
               <div className="grid grid-cols-2 gap-3">
                 {shots.map((x) => (
                   <div key={x.page} className={`rounded-xl p-1.5 ${x.blurry ? 'ring-4 ring-navy' : 'ring-1 ring-rule'}`}>
-                    <Scan examId="frac" answers={sub.answers} compact blur={x.blurry} only={PAGES[x.page]} />
-                    <div className="text-center text-xs font-semibold mt-1">{x.blurry ? '! Page 2: blurry' : `✓ Page ${x.page + 1}: clear`}</div>
+                    {x.src ? <img src={x.src} alt={`Page ${x.page + 1} you chose`} className="w-full h-40 object-cover rounded-lg" /> : <Scan examId="frac" answers={sub.answers} compact blur={x.blurry} only={PAGES[x.page]} />}
+                    <div className="text-center text-xs font-semibold mt-1">{x.blurry ? `! Page ${x.page + 1}: blurry` : `✓ Page ${x.page + 1}: clear`}</div>
                   </div>
                 ))}
               </div>
-              <Btn big className="w-full" onClick={() => { retake(); setStep(1); }}>Take page 2 again</Btn>
+              <Btn big className="w-full" onClick={() => { retake(); setStep(1); }}>Take page {blurry.page + 1} again</Btn>
             </>
           ) : (
             <>

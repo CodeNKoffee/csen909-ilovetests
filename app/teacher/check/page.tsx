@@ -68,6 +68,7 @@ function Check({ id }: { id: string }) {
     <TeacherShell title={`Check text · ${student.name}`} actions={<Chip tone="line">{exam.title}</Chip>}>
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <Chip tone="tint">Least certain first</Chip>
+        <Chip tone="line">Demo data: the text the AI “read” is fixed sample text, not live OCR</Chip>
         <label className="text-sm flex items-center gap-2">Exam language
           <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} className="border border-rule rounded-lg px-2 py-1 bg-white font-semibold">
             <option value="en">English</option><option value="de">Deutsch</option>
